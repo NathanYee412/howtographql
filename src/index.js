@@ -1,56 +1,60 @@
 const { ApolloServer, addResolveFunctionsToSchema } = require('apollo-server');
+const { PrismaClient, Prisma } = require('@prisma/client')
 
-// 1
+
 let links = [{
     id: 'link-0',
     url: 'www.howtographql.com',
     description: 'Full stack tutorial for GraphQL'
 }]
 
-// 1
+
 let idCount = links.length
 const resolvers = {
     Query: {
         info: () => `This is the API of a hacker news clone`,
-        feed: () => links,
+        feed: async (parent, args, context) => {
+            return context.prisma.link.findMany()
+        },
         link: (root, { id }) => links.find(link => link.id === id)
     },
- 
-
-
 
     Mutation: {
-        // 2
-        post: (parent, args) => {
-            const link = {
-                id: `link-${idCount++}`,
-                description: args.description,
-                url: args.url,
-            }
-            links.push(link)
-            return link
+        post: (parent, args, context, info) => {
+            const newLink = context.prisma.link.create({
+                data: {
+                    url: args.url,
+                    description: args.description,
+                },
+            })
+            return newLink
         },
 
-        // updateLink: (root, args) => {
-        //     links.forEach((link) => {
-        //         if(link.id === args.id) {
-        //             link.id = args.id;
-        //             link.url = args.url;
-        //             link.description = args.description;
-        //         }
-        //         return link;
-        //     });  
-        // },
 
-        // deleteLink: (root, args) => {
-        //     const removeIndex = links.findIndex(item => item.id == args.id);
-        //     const removedLink = links[removeIndex];
-        //     links.splice(removeIndex, 1);
+        /*
+        updateLink: (root, args) => {
+            links.forEach((link) => {
+                if(link.id === args.id) {
+                    link.id = args.id;
+                    link.url = args.url;
+                    link.description = args.description;
+                }
+                return link;
+            });  
+        },
 
-        //     return removedLink;
-        // }
+        deleteLink: (root, args) => {
+            const removeIndex = links.findIndex(item => item.id == args.id);
+            const removedLink = links[removeIndex];
+            links.splice(removeIndex, 1);
+
+            return removedLink;
+        } */
     },
 }
+
+// Prisma Client instantiation
+const prisma = new PrismaClient()
 
 const fs = require('fs');
 const path = require('path');
@@ -61,6 +65,9 @@ const server = new ApolloServer({
     'utf8'
   ),
   resolvers,
+  context: {
+      prisma,
+  }
 })
 
 server
