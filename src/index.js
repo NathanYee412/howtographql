@@ -15,20 +15,9 @@ const resolvers = {
         feed: () => links,
         link: (root, { id }) => links.find(link => link.id === id)
     },
-   
-    /*
+ 
 
-    How to query by ID, Needs parameters at bottom to return or throws error 
 
-query{
-	link(id: "link-0") {
-    description
-    id
-    url
-  }
-}
-    */
-    
 
     Mutation: {
         // 2
@@ -42,24 +31,24 @@ query{
             return link
         },
 
-        updateLink: (root, args) => {
-            links.forEach((link) => {
-                if(link.id === args.id) {
-                    link.id = args.id;
-                    link.url = args.url;
-                    link.description = args.description;
-                }
-                return link;
-            });  
-        },
+        // updateLink: (root, args) => {
+        //     links.forEach((link) => {
+        //         if(link.id === args.id) {
+        //             link.id = args.id;
+        //             link.url = args.url;
+        //             link.description = args.description;
+        //         }
+        //         return link;
+        //     });  
+        // },
 
-        deleteLink: (root, args) => {
-            const removeIndex = links.findIndex(item => item.id == args.id);
-            const removedLink = links[removeIndex];
-            links.splice(removeIndex, 1);
+        // deleteLink: (root, args) => {
+        //     const removeIndex = links.findIndex(item => item.id == args.id);
+        //     const removedLink = links[removeIndex];
+        //     links.splice(removeIndex, 1);
 
-            return removedLink;
-        }
+        //     return removedLink;
+        // }
     },
 }
 
