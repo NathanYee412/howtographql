@@ -6,6 +6,15 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL
 );
 
+-- CreateTable
+CREATE TABLE "Vote" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "linkId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    FOREIGN KEY ("linkId") REFERENCES "Link" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 -- RedefineTables
 PRAGMA foreign_keys=OFF;
 CREATE TABLE "new_Link" (
@@ -24,3 +33,6 @@ PRAGMA foreign_keys=ON;
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Vote.linkId_userId_unique" ON "Vote"("linkId", "userId");

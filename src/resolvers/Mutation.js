@@ -93,7 +93,7 @@ async function post(parent, args, context, info) {
 
   return newVote
 }
-  
+
   module.exports = {
     signup,
     login,

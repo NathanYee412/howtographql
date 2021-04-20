@@ -19,7 +19,6 @@ type Link {
     postedBy: User
     votes: [Vote!]!
 }
-
 type AuthPayload {
     token: String
     user: User
